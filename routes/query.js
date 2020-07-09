@@ -2,17 +2,17 @@ const router = require("express").Router();
 const request = require("request");
 let routesArr = [];
 
-function redirectToHome() {
+function redirectToHome(res) {
   return res.redirect("/");
 }
 
-function validateInput(query) {
+function validateInput(query, res) {
   if (Object.keys(query).length === 0 && query.constructor === Object)
-    redirectToHome();
+    redirectToHome(res);
 
   for (const key in query) {
     if (key !== "src" && key !== "dst")
-      redirectToHome();
+      redirectToHome(res);
   }
 
   if (
@@ -20,18 +20,18 @@ function validateInput(query) {
     typeof query["src"] === "undefined" ||
     typeof query["dst"] === "undefined"
   )
-    redirectToHome();
+    redirectToHome(res);
 
   const arrSrc = query["src"].split(",");
 
   if (arrSrc.length === 1)
-    redirectToHome();
+    redirectToHome(res);
 
   const srcLat = parseFloat(arrSrc[0]);
   const srcLon = parseFloat(arrSrc[1]);
 
   if (isNaN(srcLat) || isNaN(srcLon))
-    redirectToHome();
+    redirectToHome(res);
 
   const { dst } = query;
 
@@ -39,17 +39,17 @@ function validateInput(query) {
     let arrDst = dst[key].split(',')
 
     if (arrDst.length === 1)
-      redirectToHome();
+      redirectToHome(res);
 
     let dstLat = parseFloat(arrDst[0]);
     let dstLon = parseFloat(arrDst[1]);
     if (isNaN(dstLat) || isNaN(dstLon))
-      redirectToHome();
+      redirectToHome(res);
   }
 }
 
 router.get("/", (req, res) => {
-  validateInput(req.query);
+  validateInput(req.query, res);
 
   const { src, dst } = req.query;
 
@@ -68,7 +68,6 @@ router.get("/", (req, res) => {
           throw err
         } else if (response.statusCode !== 200) {
           console.error("Status: ", response.statusCode);
-          throw "Status: ", response.statusCode
         } else {
           routesArr.push({
             destination: dst[key],
@@ -78,6 +77,11 @@ router.get("/", (req, res) => {
         }
       }
     );
+  }
+
+  if (routesArr.length === 0){
+    console.error("Routes array is empty!")
+    res.send("Please reload the page!");
   }
 
   // provides unique values
