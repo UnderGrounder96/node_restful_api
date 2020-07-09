@@ -1,11 +1,13 @@
 {
   "name": "restful_api",
-  "version": "1.0.1",
+  "version": "1.3.2",
   "description": "my restful api",
   "author": "Lucio Afonso",
   "license": "SEE LICENSE IN LICENSE",
   "main": "app.js",
   "private": true,
+  "homepage": "https://restful-api-json.herokuapp.com/",
+  "repository": "github:UnderGrounder96/node_restful_api",
   "scripts": {
     "start": "node bin/www",
     "dev": "npx nodemon bin/www"
