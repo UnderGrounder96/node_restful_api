@@ -80,7 +80,7 @@ router.get("/", (req, res) => {
     );
   }
 
-  arr.sort((objA, objB) => {
+  arrTmp.sort((objA, objB) => {
     if (objA["duration"] < objB["duration"]) {
       return -1;
     } else if (objA["duration"] > objB["duration"]) {
