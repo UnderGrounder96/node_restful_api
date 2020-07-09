@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const request = require("request");
-const arrTmp = [];
+let routesArr = [];
 
 function redirectToHome() {
   return res.redirect("/");
@@ -22,36 +22,36 @@ function validateInput(query) {
   )
     redirectToHome();
 
-  let arrSrc = query["src"].split(",");
-  let srcLat = parseFloat(arrSrc[0]);
-  let srcLon = parseFloat(arrSrc[1]);
+  const arrSrc = query["src"].split(",");
+
+  if (arrSrc.length === 1)
+    redirectToHome();
+
+  const srcLat = parseFloat(arrSrc[0]);
+  const srcLon = parseFloat(arrSrc[1]);
 
   if (isNaN(srcLat) || isNaN(srcLon))
     redirectToHome();
 
-  //TODO: Implement the above check for all dst
-}
+  const { dst } = query;
 
-function getUnique(arr, comp) {
-  // store the comparison  values in array
-  const unique = arr
-    .map((e) => e[comp])
+  for(const key in dst ){
+    let arrDst = dst[key].split(',')
 
-    // store the indexes of the unique objects
-    .map((e, i, final) => final.indexOf(e) === i && i)
+    if (arrDst.length === 1)
+      redirectToHome();
 
-    // eliminate the false indexes & return unique objects
-    .filter((e) => arr[e])
-    .map((e) => arr[e]);
-
-  return unique;
+    let dstLat = parseFloat(arrDst[0]);
+    let dstLon = parseFloat(arrDst[1]);
+    if (isNaN(dstLat) || isNaN(dstLon))
+      redirectToHome();
+  }
 }
 
 router.get("/", (req, res) => {
   validateInput(req.query);
 
-  const { src, dst } = req.query,
-    routes = [];
+  const { src, dst } = req.query;
 
   for (const key in dst) {
     let urlString =
@@ -64,13 +64,13 @@ router.get("/", (req, res) => {
       },
       (err, response, responseAPI) => {
         if (err) {
-          console.error("ERROR: ");
-          console.error(err);
+          console.error("ERROR: ", err);
+          throw err
         } else if (response.statusCode !== 200) {
-          console.error("Status: ");
-          console.error(response.statusCode);
+          console.error("Status: ", response.statusCode);
+          throw "Status: ", response.statusCode
         } else {
-          arrTmp.push({
+          routesArr.push({
             destination: dst[key],
             duration: responseAPI["routes"][0]["duration"],
             distance: responseAPI["routes"][0]["distance"],
@@ -80,7 +80,15 @@ router.get("/", (req, res) => {
     );
   }
 
-  arrTmp.sort((objA, objB) => {
+  // provides unique values
+  routesArr =
+    Array
+    .from(new Set(routesArr.map((a) => a.destination)))
+    .map((destination) => {
+      return routesArr.find((a) => a.destination === destination);
+    });
+
+  routesArr.sort((objA, objB) => {
     if (objA["duration"] < objB["duration"]) {
       return -1;
     } else if (objA["duration"] > objB["duration"]) {
@@ -94,11 +102,9 @@ router.get("/", (req, res) => {
     return 0;
   });
 
-  routes.push(getUnique(arrTmp, "destination"));
-
   res.status(200).json({
     source: src,
-    routes: routes,
+    routes: routesArr,
   });
 });
 
