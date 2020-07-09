@@ -39,14 +39,18 @@ Please link all npm dependencies:
 [...]
 ```
 <br />
-In order to start the NodeJS server, please execute:<br />
+In order to start the NodeJS server, please execute:
+
 ```
 ~/node_restful_api> npm start
-[Welcome to my website!]
-```
+[...]
+[node bin/www]
+```    
+
 <br />
 Then opening a browser, example **Google Chrome**, please visit:<br />
-  [localhost:3000](http://localhost:3000)
+
+[localhost:3000](http://localhost:3000)
 
 ## Author ##
 Lucio Afonso
