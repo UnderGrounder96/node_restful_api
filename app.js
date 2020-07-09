@@ -1,10 +1,10 @@
-const path = require("path"),
-  logger = require("morgan"),
-  express = require("express"),
-  createError = require("http-errors"),
-  app = express(),
-  indexRouter = require("./routes/index"),
-  queryRouter = require("./routes/query");
+const path = require("path");
+const logger = require("morgan");
+const express = require("express");
+const createError = require("http-errors");
+const app = express();
+const indexRouter = require("./routes/index");
+const queryRouter = require("./routes/query");
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
