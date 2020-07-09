@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('head.ejs') %>
+
+  <body class="container shadow bg">
+
+    <%- include('header.ejs') %>
+
+    <main class="container text-center" role="main">
+      <h2>Welcome to my Restful API website</h2>
+
+      <p>
+        <pre class="mt-3">
+          <strong>Rules:</strong>
+          1- You may use only one source.
+          2- Please use &amp; to split the source and destinations.
+          3- For distance measuring, please specify a pair of latitude and longitude.
+          4- You can only call the API using '&sol;routes&quest;' and specifying src and dest.
+        </pre>
+
+        <br />
+        <em>A <strong style="text-decoration: underline">valid example</strong> would be:</em>
+        <br />
+
+        <code >
+          /routes?src=13.388860,52.517037&dst=13.397634,52.529407&dst=13.428555,52.523219
+        </code>
+      </p>
+    </main>
+
+    <%- include('footer.ejs') %>
+    <%- include('spinner.ejs') %>
+
+    <script src="/js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+body {
+  position: relative;
+  font-family: "Lucida Grande";
+}
+main {
+  position: relative;
+}
+
+main::after {
+  content: "";
+  z-index: -1;
+  opacity: 0.1;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('/images/logo.png') no-repeat fixed center;
+}
+
+.spinner {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+  background: url('/images/preloader.gif') center no-repeat #fff;
+}

@@ -1,0 +1,12 @@
+# private
+TODO.txt
+
+# Logs
+logs
+*.log
+
+# package-lock file
+package-lock.json
+
+# Dependency directories
+node_modules/
