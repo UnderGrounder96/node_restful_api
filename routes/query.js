@@ -11,8 +11,7 @@ function validateInput(query, res) {
     redirectToHome(res);
 
   for (const key in query) {
-    if (key !== "src" && key !== "dst")
-      redirectToHome(res);
+    if (key !== "src" && key !== "dst") redirectToHome(res);
   }
 
   if (
@@ -24,27 +23,23 @@ function validateInput(query, res) {
 
   const arrSrc = query["src"].split(",");
 
-  if (arrSrc.length === 1)
-    redirectToHome(res);
+  if (arrSrc.length === 1) redirectToHome(res);
 
   const srcLat = parseFloat(arrSrc[0]);
   const srcLon = parseFloat(arrSrc[1]);
 
-  if (isNaN(srcLat) || isNaN(srcLon))
-    redirectToHome(res);
+  if (isNaN(srcLat) || isNaN(srcLon)) redirectToHome(res);
 
   const { dst } = query;
 
-  for(const key in dst ){
-    let arrDst = dst[key].split(',')
+  for (const key in dst) {
+    let arrDst = dst[key].split(",");
 
-    if (arrDst.length === 1)
-      redirectToHome(res);
+    if (arrDst.length === 1) redirectToHome(res);
 
     let dstLat = parseFloat(arrDst[0]);
     let dstLon = parseFloat(arrDst[1]);
-    if (isNaN(dstLat) || isNaN(dstLon))
-      redirectToHome(res);
+    if (isNaN(dstLat) || isNaN(dstLon)) redirectToHome(res);
   }
 }
 
@@ -55,9 +50,14 @@ router.get("/", (req, res) => {
 
   for (const key in dst) {
     let urlString =
-      "http://router.project-osrm.org/route/v1/driving/" + src + ";" + dst[key] + "?overview=false";
+      "http://router.project-osrm.org/route/v1/driving/" +
+      src +
+      ";" +
+      dst[key] +
+      "?overview=false";
 
-    request.get({
+    request.get(
+      {
         url: urlString,
         json: true,
         headers: { "User-Agent": "request" },
@@ -65,7 +65,7 @@ router.get("/", (req, res) => {
       (err, response, responseAPI) => {
         if (err) {
           console.error("ERROR: ", err);
-          throw err
+          throw err;
         } else if (response.statusCode !== 200) {
           console.error("Status: ", response.statusCode);
         } else {
@@ -79,18 +79,17 @@ router.get("/", (req, res) => {
     );
   }
 
-  if (routesArr.length === 0){
-    console.error("Routes array is empty!")
+  if (routesArr.length === 0) {
+    console.error("Routes array is empty!");
     res.send("Please reload the page!");
   }
 
   // provides unique values
-  routesArr =
-    Array
-    .from(new Set(routesArr.map((a) => a.destination)))
-    .map((destination) => {
+  routesArr = Array.from(new Set(routesArr.map((a) => a.destination))).map(
+    (destination) => {
       return routesArr.find((a) => a.destination === destination);
-    });
+    }
+  );
 
   routesArr.sort((objA, objB) => {
     if (objA["duration"] < objB["duration"]) {
